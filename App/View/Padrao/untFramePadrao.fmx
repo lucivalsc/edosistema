@@ -1,0 +1,95 @@
+object FramePadrao: TFramePadrao
+  Size.Width = 400.000000000000000000
+  Size.Height = 700.000000000000000000
+  Size.PlatformDefault = False
+  object VertScrollBox1: TVertScrollBox
+    Align = Client
+    Size.Width = 400.000000000000000000
+    Size.Height = 700.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    Viewport.Width = 400.000000000000000000
+    Viewport.Height = 700.000000000000000000
+    object MainLayout1: TLayout
+      Align = Client
+      Size.Width = 400.000000000000000000
+      Size.Height = 700.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      object recPadrao: TRectangle
+        Align = Client
+        Fill.Color = xFF56EFB9
+        Size.Width = 400.000000000000000000
+        Size.Height = 700.000000000000000000
+        Size.PlatformDefault = False
+        Stroke.Kind = None
+        object LayoutPadrao: TLayout
+          Align = Top
+          Size.Width = 400.000000000000000000
+          Size.Height = 50.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          object TextPadrao: TText
+            Align = Contents
+            HitTest = False
+            Size.Width = 400.000000000000000000
+            Size.Height = 50.000000000000000000
+            Size.PlatformDefault = False
+            Text = 'Texto'
+            TextSettings.Font.StyleExt = {00070000000000000004000000}
+          end
+          object recVoltar: TRectangle
+            Align = Left
+            Fill.Color = claNull
+            Margins.Left = 5.000000000000000000
+            Position.X = 5.000000000000000000
+            Size.Width = 50.000000000000000000
+            Size.Height = 50.000000000000000000
+            Size.PlatformDefault = False
+            Stroke.Kind = None
+            object PathPadraoBotao: TPath
+              Align = Client
+              Data.Path = {
+                0B000000000000000000A04100003041010000000000A0410000504101000000
+                000000410000504101000000000058410000944101000000AE474141295C9F41
+                01000000B81E85400000404101000000AE4741415C8F82400100000000005841
+                0000B040010000000000004100003041010000000000A0410000304103000000
+                0000A04100003041}
+              Fill.Color = claBlack
+              Locked = True
+              HitTest = False
+              Margins.Left = 12.000000000000000000
+              Margins.Top = 12.000000000000000000
+              Margins.Right = 12.000000000000000000
+              Margins.Bottom = 12.000000000000000000
+              Size.Width = 26.000000000000000000
+              Size.Height = 26.000000000000000000
+              Size.PlatformDefault = False
+              Stroke.Kind = None
+              WrapMode = Fit
+            end
+          end
+        end
+        object recPadraoConteudo: TRectangle
+          Align = Client
+          Corners = [TopLeft, TopRight]
+          Fill.Color = xFFF6F6F6
+          Size.Width = 400.000000000000000000
+          Size.Height = 650.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Kind = None
+        end
+      end
+    end
+  end
+  object ActionList1: TActionList
+    Left = 144
+    Top = 184
+    object actMudarTab: TChangeTabAction
+      Category = 'Tab'
+    end
+    object Action1: TAction
+      Text = 'Action1'
+    end
+  end
+end

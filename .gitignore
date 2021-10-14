@@ -67,3 +67,15 @@ __recovery/
 
 # Boss dependency manager vendor folder https://github.com/HashLoad/boss
 modules/
+
+*.fdb
+*.rar
+*.xml
+*.dex
+*.png
+*.jpeg
+App/Android/Release/EdoSistema/library/lib/armeabi-v7a/gdbserver
+App/Android/Release/ProjetoPadrao/library/lib/armeabi-v7a/gdbserver
+App/Android/Debug/ProjetoPadrao/library/lib/armeabi-v7a/gdbserver
+*.txt
+App/EdoSistema/library/lib/armeabi-v7a/gdbserver

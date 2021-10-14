@@ -1,0 +1,812 @@
+inherited FrameInventario: TFrameInventario
+  inherited VertScrollBox1: TVertScrollBox
+    Viewport.Width = 400.000000000000000000
+    Viewport.Height = 700.000000000000000000
+    inherited MainLayout1: TLayout
+      inherited recPadrao: TRectangle
+        OnClick = recVoltarClick
+        inherited LayoutPadrao: TLayout
+          inherited TextPadrao: TText
+            Text = 'Invent'#225'rio'
+            TextSettings.Font.StyleExt = {00070000000000000004000000}
+          end
+          inherited recVoltar: TRectangle
+            OnClick = recVoltarClick
+          end
+        end
+        inherited recPadraoConteudo: TRectangle
+          object tbctrlPrincipal: TTabControl
+            Align = Client
+            Size.Width = 400.000000000000000000
+            Size.Height = 650.000000000000000000
+            Size.PlatformDefault = False
+            TabHeight = 49.000000000000000000
+            TabIndex = 0
+            TabOrder = 0
+            TabPosition = PlatformDefault
+            Sizes = (
+              400s
+              601s
+              400s
+              601s)
+            object tbitemListagem: TTabItem
+              CustomIcon = <
+                item
+                end>
+              IsSelected = True
+              Size.Width = 68.000000000000000000
+              Size.Height = 49.000000000000000000
+              Size.PlatformDefault = False
+              StyleLookup = ''
+              TabOrder = 0
+              Text = 'Listagem'
+              ExplicitSize.cx = 160.000000000000000000
+              ExplicitSize.cy = 49.000000000000000000
+              object Layout1: TLayout
+                Align = Client
+                Size.Width = 400.000000000000000000
+                Size.Height = 553.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 0
+                object Grid1: TGrid
+                  Align = Client
+                  CanFocus = True
+                  ClipChildren = True
+                  Size.Width = 400.000000000000000000
+                  Size.Height = 497.000000000000000000
+                  Size.PlatformDefault = False
+                  StyleLookup = 'gridstyle'
+                  TextSettings.Font.Size = 11.000000000000000000
+                  StyledSettings = [Family, Style, FontColor]
+                  TabOrder = 0
+                  RowHeight = 35.000000000000000000
+                  RowCount = 0
+                  Options = [ColumnResize, ColumnMove, ColLines, RowLines, Tabs, Header, HeaderClick, AutoDisplacement]
+                  Viewport.Width = 400.000000000000000000
+                  Viewport.Height = 497.000000000000000000
+                end
+                object lblTotais: TLabel
+                  Align = Bottom
+                  StyledSettings = [Family, Size, Style]
+                  Margins.Left = 4.000000000000000000
+                  Margins.Top = 2.000000000000000000
+                  Margins.Right = 4.000000000000000000
+                  Margins.Bottom = 8.000000000000000000
+                  Position.X = 4.000000000000000000
+                  Position.Y = 499.000000000000000000
+                  Size.Width = 392.000000000000000000
+                  Size.Height = 46.000000000000000000
+                  Size.PlatformDefault = False
+                  TextSettings.HorzAlign = Center
+                  Text = 'Totais'
+                  TabOrder = 1
+                end
+              end
+              object Layout2: TLayout
+                Align = Bottom
+                Position.Y = 553.000000000000000000
+                Size.Width = 400.000000000000000000
+                Size.Height = 48.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 1
+                object ToolBar3: TToolBar
+                  Size.Width = 400.000000000000000000
+                  Size.Height = 48.000000000000000000
+                  Size.PlatformDefault = False
+                  TabOrder = 0
+                  object recConfiguracao: TRectangle
+                    Align = Left
+                    Fill.Color = claNull
+                    Margins.Left = 14.000000000000000000
+                    Margins.Top = 4.000000000000000000
+                    Margins.Right = 4.000000000000000000
+                    Margins.Bottom = 4.000000000000000000
+                    Position.X = 14.000000000000000000
+                    Position.Y = 4.000000000000000000
+                    Size.Width = 40.000000000000000000
+                    Size.Height = 40.000000000000000000
+                    Size.PlatformDefault = False
+                    Stroke.Kind = None
+                    OnClick = recConfiguracaoClick
+                    object Path1: TPath
+                      Align = Client
+                      Data.Path = {
+                        0E00000000000000000040410000004002000000D544CF400000004002000000
+                        00000040D544CF400200000000000040000040410200000000000040CB2E8C41
+                        02000000D544CF400000B04102000000000040410000B04102000000CB2E8C41
+                        0000B041020000000000B041CB2E8C41020000000000B0410000404102000000
+                        0000B041D544CF4002000000CB2E8C4100000040020000000000404100000040
+                        030000000000404100000040}
+                      Fill.Color = xFF56EFB9
+                      Locked = True
+                      HitTest = False
+                      Size.Width = 40.000000000000000000
+                      Size.Height = 40.000000000000000000
+                      Size.PlatformDefault = False
+                      Stroke.Kind = None
+                      WrapMode = Fit
+                      object Path4: TPath
+                        Align = Client
+                        Data.Path = {
+                          0E00000000000000000098410000504101000000000050410000504101000000
+                          0000504100009841010000000000304100009841010000000000304100005041
+                          010000000000A04000005041010000000000A040000030410100000000003041
+                          0000304101000000000030410000A04001000000000050410000A04001000000
+                          0000504100003041010000000000984100003041010000000000984100005041
+                          030000000000984100005041}
+                        Fill.Color = claWhite
+                        Locked = True
+                        HitTest = False
+                        Margins.Left = 8.000000000000000000
+                        Margins.Top = 8.000000000000000000
+                        Margins.Right = 8.000000000000000000
+                        Margins.Bottom = 8.000000000000000000
+                        Size.Width = 24.000000000000000000
+                        Size.Height = 24.000000000000000000
+                        Size.PlatformDefault = False
+                        Stroke.Kind = None
+                        WrapMode = Fit
+                      end
+                    end
+                  end
+                  object Rectangle3: TRectangle
+                    Align = Right
+                    Fill.Color = claNull
+                    Margins.Left = 4.000000000000000000
+                    Margins.Top = 4.000000000000000000
+                    Margins.Right = 14.000000000000000000
+                    Margins.Bottom = 4.000000000000000000
+                    Position.X = 346.000000000000000000
+                    Position.Y = 4.000000000000000000
+                    Size.Width = 40.000000000000000000
+                    Size.Height = 40.000000000000000000
+                    Size.PlatformDefault = False
+                    Stroke.Kind = None
+                    OnClick = Rectangle3Click
+                    object Path3: TPath
+                      Align = Client
+                      Data.Path = {
+                        2B000000000000000080B0410000FE40020000000000A2410000C44002000000
+                        9A198E410000A04002000000000070410000A04002000000979045410000A040
+                        020000006ADE1C41D8B6C14002000000CBB9FD40CBB9FD4002000000D8B6C140
+                        6ADE1C41020000000000A04097904541020000000000A0400000704102000000
+                        0000A040B5378D4102000000D8B6C140CB90A14102000000CBB9FD409D91B041
+                        020000006ADE1C413A92BF4102000000979045410000C8410200000000007041
+                        0000C84102000000CD4C9D410000C841020000006666BC410080AE4102000000
+                        CD4CC54100008C41010000000080B04100008C4102000000CD4CA841CD4CA341
+                        020000009A1992410000B44102000000000070410000B44102000000A52C5041
+                        0000B44102000000B5A63141ACADAD4102000000AF251B41296DA24102000000
+                        94A40441A52C9741020000000000F040ADE98741020000000000F04000007041
+                        020000000000F040A52C50410200000094A40441B5A6314102000000AF251B41
+                        AF251B4102000000B5A6314194A4044102000000A52C50410000F04002000000
+                        000070410000F040020000009A9988410000F0400200000066669741CDCC0541
+                        020000003333A2419A991B41010000000000824100005C41010000000000C841
+                        00005C41010000000000C8410000A040010000000080B0410000FE4003000000
+                        0080B0410000FE40}
+                      Fill.Color = xFF333333
+                      Locked = True
+                      HitTest = False
+                      Margins.Left = 4.000000000000000000
+                      Margins.Top = 4.000000000000000000
+                      Margins.Right = 4.000000000000000000
+                      Margins.Bottom = 4.000000000000000000
+                      Size.Width = 32.000000000000000000
+                      Size.Height = 32.000000000000000000
+                      Size.PlatformDefault = False
+                      Stroke.Kind = None
+                      WrapMode = Fit
+                    end
+                    object FloatAnimation1: TFloatAnimation
+                      Duration = 0.300000011920929000
+                      Loop = True
+                      PropertyName = 'RotationAngle'
+                      StartValue = 0.000000000000000000
+                      StopValue = 360.000000000000000000
+                    end
+                  end
+                  object Rectangle2: TRectangle
+                    Align = Left
+                    Fill.Color = claNull
+                    Margins.Left = 25.000000000000000000
+                    Margins.Top = 4.000000000000000000
+                    Margins.Right = 4.000000000000000000
+                    Margins.Bottom = 4.000000000000000000
+                    Position.X = 83.000000000000000000
+                    Position.Y = 4.000000000000000000
+                    Size.Width = 40.000000000000000000
+                    Size.Height = 40.000000000000000000
+                    Size.PlatformDefault = False
+                    Stroke.Kind = None
+                    OnClick = Rectangle2Click
+                    object Path2: TPath
+                      Align = Client
+                      Data.Path = {
+                        0E00000000000000000040410000004002000000D544CF400000004002000000
+                        00000040D544CF400200000000000040000040410200000000000040CB2E8C41
+                        02000000D544CF400000B04102000000000040410000B04102000000CB2E8C41
+                        0000B041020000000000B041CB2E8C41020000000000B0410000404102000000
+                        0000B041D544CF4002000000CB2E8C4100000040020000000000404100000040
+                        030000000000404100000040}
+                      Fill.Color = xFF333333
+                      Locked = True
+                      HitTest = False
+                      Size.Width = 40.000000000000000000
+                      Size.Height = 40.000000000000000000
+                      Size.PlatformDefault = False
+                      Stroke.Kind = None
+                      WrapMode = Fit
+                      object Path5: TPath
+                        Align = Client
+                        Data.Path = {
+                          1E00000000000000000010410000404001000000000010410000804001000000
+                          000080400000804001000000000080400000C040010000000000A0400000C040
+                          010000000000A04000009841020000000000A04029D6A041020000005EA7BC40
+                          0000A841020000000000E0400000A84101000000000088410000A84102000000
+                          29D690410000A841020000000000984129D6A041020000000000984100009841
+                          01000000000098410000C040010000000000A0410000C040010000000000A041
+                          0000804001000000000070410000804001000000000070410000404001000000
+                          0000104100004040000000000000104100000041010000000000304100000041
+                          0100000000003041000088410100000000001041000088410100000000001041
+                          0000004100000000000050410000004101000000000070410000004101000000
+                          0000704100008841010000000000504100008841010000000000504100000041
+                          030000000000504100000041}
+                        Fill.Color = claWhite
+                        Locked = True
+                        HitTest = False
+                        Margins.Left = 8.000000000000000000
+                        Margins.Top = 8.000000000000000000
+                        Margins.Right = 8.000000000000000000
+                        Margins.Bottom = 8.000000000000000000
+                        Size.Width = 24.000000000000000000
+                        Size.Height = 24.000000000000000000
+                        Size.PlatformDefault = False
+                        Stroke.Kind = None
+                        WrapMode = Fit
+                      end
+                    end
+                  end
+                end
+              end
+            end
+            object tbitemEdicao: TTabItem
+              CustomIcon = <
+                item
+                end>
+              IsSelected = False
+              Size.Width = 55.000000000000000000
+              Size.Height = 49.000000000000000000
+              Size.PlatformDefault = False
+              StyleLookup = ''
+              TabOrder = 0
+              Text = 'Edi'#231#227'o'
+              ExplicitSize.cx = 160.000000000000000000
+              ExplicitSize.cy = 49.000000000000000000
+              object lytPesquisar: TLayout
+                Align = Top
+                Size.Width = 400.000000000000000000
+                Size.Height = 97.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 0
+                object Rectangle1: TRectangle
+                  Align = Client
+                  Fill.Color = claWhite
+                  Size.Width = 400.000000000000000000
+                  Size.Height = 97.000000000000000000
+                  Size.PlatformDefault = False
+                  Stroke.Kind = None
+                  object Layout3: TLayout
+                    Align = Bottom
+                    Position.Y = 51.000000000000000000
+                    Size.Width = 400.000000000000000000
+                    Size.Height = 46.000000000000000000
+                    Size.PlatformDefault = False
+                    TabOrder = 0
+                    object Button1: TButton
+                      Align = Left
+                      Margins.Left = 5.000000000000000000
+                      Position.X = 5.000000000000000000
+                      Size.Width = 48.000000000000000000
+                      Size.Height = 46.000000000000000000
+                      Size.PlatformDefault = False
+                      StyleLookup = 'arrowlefttoolbutton'
+                      TabOrder = 0
+                      Text = 'Button1'
+                      OnClick = Button1Click
+                    end
+                    object Button2: TButton
+                      Align = Left
+                      Position.X = 137.000000000000000000
+                      Size.Width = 48.000000000000000000
+                      Size.Height = 46.000000000000000000
+                      Size.PlatformDefault = False
+                      StyleLookup = 'arrowrighttoolbutton'
+                      TabOrder = 2
+                      Text = 'Button1'
+                      OnClick = Button2Click
+                    end
+                    object edtQtdeItem: TEdit
+                      Touch.InteractiveGestures = [LongTap, DoubleTap]
+                      Align = Left
+                      TabOrder = 3
+                      KeyboardType = NumberPad
+                      Text = '1'
+                      TextSettings.HorzAlign = Center
+                      Position.X = 53.000000000000000000
+                      Position.Y = 4.000000000000000000
+                      Margins.Top = 4.000000000000000000
+                      Margins.Bottom = 4.000000000000000000
+                      Size.Width = 84.000000000000000000
+                      Size.Height = 38.000000000000000000
+                      Size.PlatformDefault = False
+                      OnKeyUp = edtQtdeItemKeyUp
+                    end
+                    object edtLocEstoque: TEdit
+                      Touch.InteractiveGestures = [LongTap, DoubleTap]
+                      Align = Client
+                      TabOrder = 1
+                      MaxLength = 11
+                      TextSettings.Font.Size = 16.000000000000000000
+                      Margins.Left = 5.000000000000000000
+                      Margins.Right = 5.000000000000000000
+                      Size.Width = 205.000000000000000000
+                      Size.Height = 46.000000000000000000
+                      Size.PlatformDefault = False
+                      TextPrompt = 'Local estoque'
+                      StyledSettings = [Family, Style, FontColor]
+                      CharCase = ecUpperCase
+                    end
+                  end
+                  object edtPesq: TEdit
+                    Touch.InteractiveGestures = [LongTap, DoubleTap]
+                    Anchors = [akLeft, akTop, akRight]
+                    TabOrder = 1
+                    TextSettings.Font.Size = 16.000000000000000000
+                    Position.X = 8.000000000000000000
+                    Position.Y = 8.000000000000000000
+                    Size.Width = 265.000000000000000000
+                    Size.Height = 32.000000000000000000
+                    Size.PlatformDefault = False
+                    TextPrompt = 'Pesquisar produto'
+                    StyledSettings = [Family, Style, FontColor]
+                    OnKeyUp = edtPesqKeyUp
+                  end
+                  object imgPesquisar: TRectangle
+                    Anchors = [akTop, akRight]
+                    Fill.Color = claNull
+                    Margins.Left = 5.000000000000000000
+                    Position.X = 281.000000000000000000
+                    Position.Y = 8.000000000000000000
+                    Size.Width = 32.000000000000000000
+                    Size.Height = 32.000000000000000000
+                    Size.PlatformDefault = False
+                    Stroke.Kind = None
+                    OnClick = imgPesquisarClick
+                    object Path8: TPath
+                      Align = Client
+                      Data.Path = {
+                        2F00000000000000000018410000404002000000189533410000404002000000
+                        03094E4117D46B4002000000098A614103EC9C40020000000F0B7541E5EDC340
+                        0200000000008041BBD5F8400200000000008041000018410200000000008041
+                        8FC23141020000005C8F7641A4704941020000003D0A674114AE5B4101000000
+                        295C6B4100006041010000000000784100006041010000000000A44100009841
+                        01000000000098410000A4410100000000006041000078410100000000006041
+                        295C6B410100000014AE5B413D0A674102000000A47049415C8F764102000000
+                        8FC231410000804102000000000018410000804102000000BBD5F84000008041
+                        02000000E5EDC3400F0B75410200000003EC9C40098A61410200000017D46B40
+                        03094E4102000000000040401895334102000000000040400000184102000000
+                        00004040BBD5F8400200000017D46B40E5EDC3400200000003EC9C4003EC9C40
+                        02000000E5EDC34017D46B4002000000BBD5F840000040400200000000001841
+                        0000404003000000000018410000404000000000000018410000A04002000000
+                        0000E0400000A040020000000000A0400000E040020000000000A04000001841
+                        020000000000A04000004041020000000000E040000060410200000000001841
+                        0000604102000000000040410000604102000000000060410000404102000000
+                        000060410000184102000000000060410000E04002000000000040410000A040
+                        02000000000018410000A04003000000000018410000A040}
+                      Fill.Color = xFF333333
+                      Locked = True
+                      HitTest = False
+                      Margins.Left = 4.000000000000000000
+                      Margins.Top = 4.000000000000000000
+                      Margins.Right = 4.000000000000000000
+                      Margins.Bottom = 4.000000000000000000
+                      Size.Width = 24.000000000000000000
+                      Size.Height = 24.000000000000000000
+                      Size.PlatformDefault = False
+                      Stroke.Kind = None
+                      WrapMode = Fit
+                    end
+                  end
+                  object Rectangle6: TRectangle
+                    Anchors = [akTop, akRight]
+                    Fill.Color = claNull
+                    Margins.Left = 5.000000000000000000
+                    Position.X = 321.000000000000000000
+                    Position.Y = 8.000000000000000000
+                    Size.Width = 32.000000000000000000
+                    Size.Height = 32.000000000000000000
+                    Size.PlatformDefault = False
+                    Stroke.Kind = None
+                    OnClick = Rectangle6Click
+                    object Path9: TPath
+                      Align = Client
+                      Data.Path = {
+                        1E00000000000000000010410000404001000000000010410000804001000000
+                        000080400000804001000000000080400000C040010000000000A0400000C040
+                        010000000000A04000009841020000000000A04029D6A041020000005EA7BC40
+                        0000A841020000000000E0400000A84101000000000088410000A84102000000
+                        29D690410000A841020000000000984129D6A041020000000000984100009841
+                        01000000000098410000C040010000000000A0410000C040010000000000A041
+                        0000804001000000000070410000804001000000000070410000404001000000
+                        0000104100004040000000000000104100000041010000000000304100000041
+                        0100000000003041000088410100000000001041000088410100000000001041
+                        0000004100000000000050410000004101000000000070410000004101000000
+                        0000704100008841010000000000504100008841010000000000504100000041
+                        030000000000504100000041}
+                      Fill.Color = xFF333333
+                      Locked = True
+                      HitTest = False
+                      Margins.Left = 4.000000000000000000
+                      Margins.Top = 4.000000000000000000
+                      Margins.Right = 4.000000000000000000
+                      Margins.Bottom = 4.000000000000000000
+                      Size.Width = 24.000000000000000000
+                      Size.Height = 24.000000000000000000
+                      Size.PlatformDefault = False
+                      Stroke.Kind = None
+                      WrapMode = Fit
+                    end
+                  end
+                  object Rectangle7: TRectangle
+                    Anchors = [akTop, akRight]
+                    Fill.Color = claNull
+                    Margins.Left = 5.000000000000000000
+                    Position.X = 361.000000000000000000
+                    Position.Y = 8.000000000000000000
+                    Size.Width = 32.000000000000000000
+                    Size.Height = 32.000000000000000000
+                    Size.PlatformDefault = False
+                    Stroke.Kind = None
+                    OnClick = Rectangle7Click
+                    object Path10: TPath
+                      Align = Client
+                      Data.Path = {
+                        5C00000000000000000080400000C040010000000000C0400000C04001000000
+                        0000C0400000904101000000000080400000904101000000000080400000C040
+                        03000000000080400000C040000000000000E0400000C0400100000000000041
+                        0000C040010000000000004100009041010000000000E0400000904101000000
+                        0000E0400000C040030000000000E0400000C04000000000000010410000C040
+                        01000000000040410000C0400100000000004041000090410100000000001041
+                        0000904101000000000010410000C04003000000000010410000C04000000000
+                        000050410000C04001000000000060410000C040010000000000604100009041
+                        01000000000050410000904101000000000050410000C0400300000000005041
+                        0000C04000000000000080410000C04001000000000090410000C04001000000
+                        000090410000904101000000000080410000904101000000000080410000C040
+                        03000000000080410000C04000000000000098410000C040010000000000A041
+                        0000C040010000000000A0410000904101000000000098410000904101000000
+                        000098410000C04003000000000098410000C040000000000000004000008040
+                        0100000000000040000000410100000000000000000000410100000000000000
+                        0000804002000000000000006F0D5E400200000069C5573EBB7E3D4002000000
+                        12F6153F957D254002000000DBFA753F467C0D4002000000DF1ABC3F00000040
+                        020000000000004000000040010000000000C04000000040010000000000C040
+                        0000804001000000000000400000804003000000000000400000804000000000
+                        0000B0410000004002000000423EB44100000040020000001450B841467C0D40
+                        020000004850BB41957D2540020000007D50BE41BB7E3D40020000000000C041
+                        6F0D5E40020000000000C04100008040010000000000C0410000004101000000
+                        0000B04100000041010000000000B04100008040010000000000904100008040
+                        010000000000904100000040010000000000B04100000040030000000000B041
+                        0000004000000000000000400000804101000000000000400000A04101000000
+                        0000C0400000A041010000000000C0400000B04101000000000000400000B041
+                        02000000DF1ABC3F0000B04102000000DBFA753F7D50AE410200000012F6153F
+                        4850AB410200000069C5573E1450A8410200000000000000423EA44102000000
+                        000000000000A041010000000000000000008041010000000000004000008041
+                        030000000000004000008041000000000000B0410000A041010000000000B041
+                        00008041010000000000C04100008041010000000000C0410000A04102000000
+                        0000C041423EA441020000007D50BE411450A841020000004850BB414850AB41
+                        020000001450B8417D50AE4102000000423EB4410000B041020000000000B041
+                        0000B04101000000000090410000B04101000000000090410000A04101000000
+                        0000B0410000A041030000000000B0410000A041}
+                      Fill.Color = xFF333333
+                      Locked = True
+                      HitTest = False
+                      Margins.Left = 4.000000000000000000
+                      Margins.Top = 4.000000000000000000
+                      Margins.Right = 4.000000000000000000
+                      Margins.Bottom = 4.000000000000000000
+                      Size.Width = 24.000000000000000000
+                      Size.Height = 24.000000000000000000
+                      Size.PlatformDefault = False
+                      Stroke.Kind = None
+                      WrapMode = Fit
+                    end
+                  end
+                end
+              end
+              object Layout4: TLayout
+                Align = Bottom
+                Position.Y = 553.000000000000000000
+                Size.Width = 400.000000000000000000
+                Size.Height = 48.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 1
+                object ToolBar2: TToolBar
+                  Size.Width = 400.000000000000000000
+                  Size.Height = 48.000000000000000000
+                  Size.PlatformDefault = False
+                  TabOrder = 0
+                  object imgAddItem: TRectangle
+                    Align = Right
+                    Fill.Color = claNull
+                    Margins.Left = 4.000000000000000000
+                    Margins.Top = 4.000000000000000000
+                    Margins.Right = 14.000000000000000000
+                    Margins.Bottom = 4.000000000000000000
+                    Position.X = 346.000000000000000000
+                    Position.Y = 4.000000000000000000
+                    Size.Width = 40.000000000000000000
+                    Size.Height = 40.000000000000000000
+                    Size.PlatformDefault = False
+                    Stroke.Kind = None
+                    OnClick = imgAddItemClick
+                    object Path6: TPath
+                      Align = Client
+                      Data.Path = {
+                        0E00000000000000000040410000004002000000D544CF400000004002000000
+                        00000040D544CF400200000000000040000040410200000000000040CB2E8C41
+                        02000000D544CF400000B04102000000000040410000B04102000000CB2E8C41
+                        0000B041020000000000B041CB2E8C41020000000000B0410000404102000000
+                        0000B041D544CF4002000000CB2E8C4100000040020000000000404100000040
+                        030000000000404100000040}
+                      Fill.Color = xFF56EFB9
+                      Locked = True
+                      HitTest = False
+                      Size.Width = 40.000000000000000000
+                      Size.Height = 40.000000000000000000
+                      Size.PlatformDefault = False
+                      Stroke.Kind = None
+                      WrapMode = Fit
+                      object Path7: TPath
+                        Align = Client
+                        Data.Path = {
+                          0E00000000000000000098410000504101000000000050410000504101000000
+                          0000504100009841010000000000304100009841010000000000304100005041
+                          010000000000A04000005041010000000000A040000030410100000000003041
+                          0000304101000000000030410000A04001000000000050410000A04001000000
+                          0000504100003041010000000000984100003041010000000000984100005041
+                          030000000000984100005041}
+                        Fill.Color = claWhite
+                        Locked = True
+                        HitTest = False
+                        Margins.Left = 8.000000000000000000
+                        Margins.Top = 8.000000000000000000
+                        Margins.Right = 8.000000000000000000
+                        Margins.Bottom = 8.000000000000000000
+                        Size.Width = 24.000000000000000000
+                        Size.Height = 24.000000000000000000
+                        Size.PlatformDefault = False
+                        Stroke.Kind = None
+                        WrapMode = Fit
+                      end
+                    end
+                  end
+                end
+              end
+              object ListView1: TListView
+                ItemAppearanceClassName = 'TDynamicAppearance'
+                ItemEditAppearanceClassName = 'TDynamicAppearance'
+                HeaderAppearanceClassName = 'TListHeaderObjects'
+                FooterAppearanceClassName = 'TListHeaderObjects'
+                OnUpdateObjects = ListView1UpdateObjects
+                Align = Client
+                Size.Width = 400.000000000000000000
+                Size.Height = 456.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 2
+                ItemAppearance.ItemHeight = 160
+                ItemAppearanceObjects.ItemObjects.ObjectsCollection = <
+                  item
+                    AppearanceObjectName = 'TextCodProd'
+                    AppearanceClassName = 'TTextObjectAppearance'
+                    Appearance.TextAlign = Leading
+                    Appearance.Height = 25.000000000000000000
+                    Appearance.PlaceOffset.Y = 5.000000000000000000
+                  end
+                  item
+                    AppearanceObjectName = 'TextDescMarc'
+                    AppearanceClassName = 'TTextObjectAppearance'
+                    Appearance.TextAlign = Trailing
+                    Appearance.Height = 25.000000000000000000
+                    Appearance.PlaceOffset.Y = 5.000000000000000000
+                  end
+                  item
+                    AppearanceObjectName = 'TextCodBarr'
+                    AppearanceClassName = 'TTextObjectAppearance'
+                    Appearance.TextAlign = Leading
+                    Appearance.Width = 379.000000000000000000
+                    Appearance.Height = 25.000000000000000000
+                    Appearance.PlaceOffset.Y = 30.000000000000000000
+                  end
+                  item
+                    AppearanceObjectName = 'TextDesProd'
+                    AppearanceClassName = 'TTextObjectAppearance'
+                    Appearance.TextAlign = Leading
+                    Appearance.Width = 379.000000000000000000
+                    Appearance.Height = 25.000000000000000000
+                    Appearance.PlaceOffset.Y = 55.000000000000000000
+                  end
+                  item
+                    AppearanceObjectName = 'TextPreCus'
+                    AppearanceClassName = 'TTextObjectAppearance'
+                    Appearance.TextAlign = Leading
+                    Appearance.Width = 379.000000000000000000
+                    Appearance.Height = 25.000000000000000000
+                    Appearance.PlaceOffset.Y = 80.000000000000000000
+                  end
+                  item
+                    AppearanceObjectName = 'TextPreVen'
+                    AppearanceClassName = 'TTextObjectAppearance'
+                    Appearance.TextAlign = Trailing
+                    Appearance.Width = 379.000000000000000000
+                    Appearance.Height = 25.000000000000000000
+                    Appearance.PlaceOffset.Y = 80.000000000000000000
+                  end
+                  item
+                    AppearanceObjectName = 'TextLocEsto'
+                    AppearanceClassName = 'TTextObjectAppearance'
+                    Appearance.TextAlign = Leading
+                    Appearance.Width = 379.000000000000000000
+                    Appearance.Height = 25.000000000000000000
+                    Appearance.PlaceOffset.Y = 104.000000000000000000
+                  end
+                  item
+                    AppearanceObjectName = 'TextQtdAtual'
+                    AppearanceClassName = 'TTextObjectAppearance'
+                    Appearance.TextAlign = Leading
+                    Appearance.Width = 379.000000000000000000
+                    Appearance.Height = 25.000000000000000000
+                    Appearance.PlaceOffset.Y = 128.000000000000000000
+                  end
+                  item
+                    AppearanceObjectName = 'TextQtdMax'
+                    AppearanceClassName = 'TTextObjectAppearance'
+                    Appearance.TextAlign = Trailing
+                    Appearance.Width = 379.000000000000000000
+                    Appearance.Height = 25.000000000000000000
+                    Appearance.PlaceOffset.Y = 128.000000000000000000
+                  end
+                  item
+                    AppearanceObjectName = 'TextUniMed'
+                    AppearanceClassName = 'TTextObjectAppearance'
+                    Appearance.TextAlign = Trailing
+                    Appearance.Height = 25.000000000000000000
+                    Appearance.PlaceOffset.Y = 104.000000000000000000
+                  end>
+                ItemAppearanceObjects.ItemEditObjects.ObjectsCollection = <
+                  item
+                    AppearanceObjectName = 'Text1'
+                    AppearanceClassName = 'TTextObjectAppearance'
+                  end>
+                StyleLookup = 'listviewstyle'
+                OnItemClick = ListView1ItemClick
+                object Brush1: TBrushObject
+                  StyleName = 'Brush1'
+                  Brush.Kind = Gradient
+                  Brush.Gradient.Points = <
+                    item
+                      Color = xFF89B44B
+                      Offset = 1.000000000000000000
+                    end
+                    item
+                      Color = claWhite
+                      Offset = 1.000000000000000000
+                    end>
+                  Brush.Gradient.StartPosition.X = 0.500000000000000000
+                  Brush.Gradient.StartPosition.Y = 1.000000000000000000
+                  Brush.Gradient.StopPosition.X = 0.499999970197677600
+                  Brush.Gradient.StopPosition.Y = 0.000000000000000000
+                  Left = 56
+                  Top = 328
+                end
+              end
+            end
+          end
+        end
+      end
+    end
+  end
+  inherited ActionList1: TActionList
+    Left = 56
+    Top = 272
+  end
+  object BindingsList1: TBindingsList
+    Methods = <>
+    OutputConverters = <>
+    Left = 56
+    Top = 384
+    object LinkListControlToField1: TLinkListControlToField
+      Category = 'Quick Bindings'
+      DataSource = BindSourceDB1
+      Control = ListView1
+      FillExpressions = <
+        item
+          SourceMemberName = 'COD_PROD'
+          ControlMemberName = 'TextCodProd'
+        end
+        item
+          SourceMemberName = 'DES_MARC'
+          ControlMemberName = 'TextDescMarc'
+        end
+        item
+          SourceMemberName = 'COD_BARR'
+          ControlMemberName = 'TextCodBarr'
+        end
+        item
+          SourceMemberName = 'DES_PROD'
+          ControlMemberName = 'TextDesProd'
+        end
+        item
+          SourceMemberName = 'PRE_CUS'
+          ControlMemberName = 'TextPreCus'
+        end
+        item
+          SourceMemberName = 'PRE_VEN'
+          ControlMemberName = 'TextPreVen'
+        end
+        item
+          SourceMemberName = 'LOC_ESTO'
+          ControlMemberName = 'TextLocEsto'
+        end
+        item
+          SourceMemberName = 'QTD_ATUAL'
+          ControlMemberName = 'TextQtdAtual'
+        end
+        item
+          SourceMemberName = 'QTD_MAX'
+          ControlMemberName = 'TextQtdMax'
+        end
+        item
+          SourceMemberName = 'UNI_MED'
+          ControlMemberName = 'TextUniMed'
+        end>
+      FillHeaderExpressions = <>
+      FillBreakGroups = <>
+    end
+    object LinkGridToDataSourceBindSourceDB2: TLinkGridToDataSource
+      Category = 'Quick Bindings'
+      DataSource = BindSourceDB2
+      GridControl = Grid1
+      Columns = <
+        item
+          MemberName = 'COD_PROD'
+          Header = 'C'#243'digo'
+          Width = 65
+        end
+        item
+          MemberName = 'DESCRICAO'
+          Header = 'Descri'#231#227'o'
+          Width = 200
+        end
+        item
+          MemberName = 'QTDE_ANT'
+          Header = 'Ant.'
+          Width = 60
+        end
+        item
+          MemberName = 'QTDE_NOVA'
+          Header = 'Nova'
+          Width = 60
+        end>
+    end
+  end
+  object BindSourceDB1: TBindSourceDB
+    DataSet = DM.fdqProdSolicitacao
+    ScopeMappings = <>
+    Left = 208
+    Top = 280
+  end
+  object BindSourceDB2: TBindSourceDB
+    DataSet = DM.fdqInventario
+    ScopeMappings = <>
+    Left = 208
+    Top = 344
+  end
+end
