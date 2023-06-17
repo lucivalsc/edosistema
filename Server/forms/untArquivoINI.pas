@@ -16,7 +16,6 @@ uses
   FireDAC.VCLUI.Wait,
   FireDAC.Stan.Intf,
   FireDAC.Comp.UI,
-
   FireDAC.Stan.Option,
   FireDAC.Stan.Error,
   FireDAC.Phys.Intf,
@@ -38,11 +37,11 @@ uses
 
 type
   TArquivoINI = class
-  Public
-    class function LerIni(Chave1, Chave2: String; ValorPadrao: String = ''): String;
+  public
+    class function LerIni(Chave1, Chave2: string; ValorPadrao: string = ''): string;
     class procedure ConectarBanco(Conexao: TFDConnection);
     class procedure ConectarBancoOracle(Conexao: TADOConnection);
-    class function GetVersionApp(const AFileName: String): String; static;
+    class function GetVersionApp(const AFileName: string): string; static;
   end;
 
 implementation
@@ -54,7 +53,7 @@ uses
 { TArquivoINI }
 
 // Função que gera a versão do sistema
-class function TArquivoINI.GetVersionApp(const AFileName: String): String;
+class function TArquivoINI.GetVersionApp(const AFileName: string): string;
 var
   FileName: string;
   InfoSize, Wnd: DWORD;
@@ -72,8 +71,7 @@ begin
     try
       if GetFileVersionInfo(PChar(FileName), Wnd, InfoSize, VerBuf) then
         if VerQueryValue(VerBuf, '\', Pointer(FI), VerSize) then
-          Result := Concat(IntToStr(FI.dwFileVersionMS shr 16), '.', IntToStr(FI.dwFileVersionMS and $FFFF), '.', IntToStr(FI.dwFileVersionLS shr 16), '.',
-            IntToStr(FI.dwFileVersionLS and $FFFF));
+          Result := Concat(IntToStr(FI.dwFileVersionMS shr 16), '.', IntToStr(FI.dwFileVersionMS and $FFFF), '.', IntToStr(FI.dwFileVersionLS shr 16), '.', IntToStr(FI.dwFileVersionLS and $FFFF));
     finally
       FreeMem(VerBuf);
     end;
@@ -81,30 +79,13 @@ begin
 end;
 
 class procedure TArquivoINI.ConectarBanco(Conexao: TFDConnection);
+var
+  local: string;
 begin
   try
     with Conexao do
     begin
       Params.Values['DriverID'] := 'SQLite';
-
-{$IFDEF IOS}
-      try
-        Params.Values['Database'] := TPath.Combine(TPath.GetDocumentsPath, 'bd.db');
-        Connected := True;
-      except
-        on E: Exception do
-          raise Exception.Create('Erro de conexão com o banco de dados: ' + E.Message);
-      end;
-{$ENDIF}
-{$IFDEF ANDROID}
-      try
-        Params.Values['Database'] := TPath.Combine(TPath.GetDocumentsPath, 'bd.db');
-        Connected := True;
-      except
-        on E: Exception do
-          raise Exception.Create('Erro de conexão com o banco de dados: ' + E.Message);
-      end;
-{$ENDIF}
 {$IFDEF MSWINDOWS}
       Connected := false;
       LoginPrompt := false;
@@ -113,8 +94,10 @@ begin
       Params.Values['Protocol'] := TArquivoINI.LerIni('FIREBIRD', 'Protocol');
       Params.Values['Server'] := TArquivoINI.LerIni('FIREBIRD', 'Server');
       Params.Values['Database'] := TArquivoINI.LerIni('FIREBIRD', 'Database');
+      local := TArquivoINI.LerIni('FIREBIRD', 'Database');
       Params.Values['User_name'] := TArquivoINI.LerIni('FIREBIRD', 'User_name');
       Params.Values['Password'] := TArquivoINI.LerIni('FIREBIRD', 'Password');
+      Params.Values['Port'] := TArquivoINI.LerIni('FIREBIRD', 'Porta');
       Connected := True;
 {$ENDIF}
     end;
@@ -134,8 +117,7 @@ begin
     begin
       Connected := false;
       LoginPrompt := false;
-      ConnectionString := 'Provider=OraOLEDB.Oracle.1;' + 'Password=' + 'west912' + ';' + 'Persist Security Info=True;' + 'User ID=' + 'lucivalsc' + ';' +
-        'Data Source=' + TArquivoINI.LerIni('ORACLE', 'SID');
+      ConnectionString := 'Provider=OraOLEDB.Oracle.1;' + 'Password=' + 'west912' + ';' + 'Persist Security Info=True;' + 'User ID=' + 'lucivalsc' + ';' + 'Data Source=' + TArquivoINI.LerIni('ORACLE', 'SID');
       Connected := True;
     end;
   except
@@ -146,9 +128,9 @@ begin
   end;
 end;
 
-class function TArquivoINI.LerIni(Chave1, Chave2, ValorPadrao: String): String;
+class function TArquivoINI.LerIni(Chave1, Chave2, ValorPadrao: string): string;
 var
-  Arquivo: String;
+  Arquivo: string;
   FileINI: TIniFile;
 begin
 {$IFDEF MSWINDOWS}
@@ -165,3 +147,4 @@ begin
 end;
 
 end.
+

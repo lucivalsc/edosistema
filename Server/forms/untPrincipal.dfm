@@ -13,7 +13,7 @@ object frmPrincipal: TfrmPrincipal
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
-  Position = poDesktopCenter
+  Position = poDefault
   OnActivate = FormActivate
   OnCreate = FormCreate
   PixelsPerInch = 96
@@ -45,7 +45,7 @@ object frmPrincipal: TfrmPrincipal
     Width = 57
     Height = 21
     NumbersOnly = True
-    TabOrder = 0
+    TabOrder = 1
     Text = '8082'
   end
   object Button1: TButton
@@ -54,7 +54,7 @@ object frmPrincipal: TfrmPrincipal
     Width = 123
     Height = 25
     Caption = 'Button1'
-    TabOrder = 1
+    TabOrder = 0
     OnClick = Button1Click
   end
   object edtUsuario: TEdit
@@ -107,7 +107,6 @@ object frmPrincipal: TfrmPrincipal
     ForceWelcomeAccess = False
     CriptOptions.Use = False
     CriptOptions.Key = 'RDWBASEKEY256'
-    MultiCORE = False
     Left = 232
     Top = 88
   end

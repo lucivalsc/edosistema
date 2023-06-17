@@ -2,6 +2,7 @@ object ServerModule: TServerModule
   OldCreateOrder = False
   OnCreate = ServerMethodDataModuleCreate
   Encoding = esASCII
+  QueuedRequest = False
   Height = 451
   Width = 464
   object DWServerEvents1: TDWServerEvents
@@ -41,12 +42,19 @@ object ServerModule: TServerModule
             ObjectValue = ovString
             ParamName = 'Data'
             Encoded = True
+          end
+          item
+            TypeObject = toParam
+            ObjectDirection = odINOUT
+            ObjectValue = ovString
+            ParamName = 'pesquisar'
+            Encoded = True
           end>
         JsonMode = jmPureJSON
         Name = 'Produtos'
         EventName = 'Produtos'
         OnlyPreDefinedParams = False
-        OnReplyEvent = DWServerEvents1EventsProdutosReplyEvent
+        OnReplyEventByType = DWServerEvents1EventsProdutosReplyEventByType
       end
       item
         Routes = [crAll]
@@ -87,7 +95,96 @@ object ServerModule: TServerModule
         Name = 'Inventario'
         EventName = 'Inventario'
         OnlyPreDefinedParams = False
-        OnReplyEvent = DWServerEvents1EventsInventarioReplyEvent
+        OnReplyEventByType = DWServerEvents1EventsInventarioReplyEventByType
+      end
+      item
+        Routes = [crAll]
+        NeedAuthorization = True
+        DWParams = <
+          item
+            TypeObject = toParam
+            ObjectDirection = odINOUT
+            ObjectValue = ovInteger
+            ParamName = 'num_pedi'
+            Encoded = True
+          end
+          item
+            TypeObject = toParam
+            ObjectDirection = odINOUT
+            ObjectValue = ovString
+            ParamName = 'cod_loja'
+            Encoded = True
+          end>
+        JsonMode = jmPureJSON
+        Name = 'ConferenciaPedido'
+        EventName = 'ConferenciaPedido'
+        OnlyPreDefinedParams = False
+        OnReplyEventByType = DWServerEvents1EventsConferenciaPedidoReplyEventByType
+      end
+      item
+        Routes = [crAll]
+        NeedAuthorization = True
+        DWParams = <
+          item
+            TypeObject = toParam
+            ObjectDirection = odINOUT
+            ObjectValue = ovString
+            ParamName = 'Dados'
+            Encoded = True
+          end>
+        JsonMode = jmPureJSON
+        Name = 'Conferencia'
+        EventName = 'Conferencia'
+        OnlyPreDefinedParams = False
+        OnReplyEvent = DWServerEvents1EventsConferenciaReplyEvent
+      end
+      item
+        Routes = [crAll]
+        NeedAuthorization = True
+        DWParams = <
+          item
+            TypeObject = toParam
+            ObjectDirection = odINOUT
+            ObjectValue = ovString
+            ParamName = 'num_pedi'
+            Encoded = True
+          end
+          item
+            TypeObject = toParam
+            ObjectDirection = odINOUT
+            ObjectValue = ovString
+            ParamName = 'uclogin'
+            Encoded = True
+          end>
+        JsonMode = jmPureJSON
+        Name = 'Separar'
+        EventName = 'Separar'
+        OnlyPreDefinedParams = False
+        OnReplyEvent = DWServerEvents1EventsSepararReplyEvent
+      end
+      item
+        Routes = [crAll]
+        NeedAuthorization = True
+        DWParams = <
+          item
+            TypeObject = toParam
+            ObjectDirection = odINOUT
+            ObjectValue = ovString
+            ParamName = 'Data'
+            Encoded = True
+          end
+          item
+            TypeObject = toParam
+            ObjectDirection = odINOUT
+            ObjectValue = ovString
+            ParamName = 'pesquisar'
+            Encoded = True
+          end>
+        JsonMode = jmPureJSON
+        Name = 'ProdutosContagem'
+        EventName = 'ProdutosContagem'
+        OnlyPreDefinedParams = False
+        OnReplyEventByType = DWServerEvents1EventsProdutosContagemReplyEventByType
       end>
     Left = 264
     Top = 152
@@ -113,9 +210,12 @@ object ServerModule: TServerModule
   end
   object FDConnection1: TFDConnection
     Params.Strings = (
-      'DriverID=FB'
       'User_Name=sysdba'
-      'Password=masterkey')
+      'Password=masterkey'
+      'Protocol=TCPIP'
+      'Server=127.0.0.1'
+      'Port=3050'
+      'DriverID=FB')
     LoginPrompt = False
     Left = 104
     Top = 24
@@ -185,6 +285,7 @@ object ServerModule: TServerModule
     CacheUpdateRecords = True
     AutoCommitData = False
     AutoRefreshAfterCommit = False
+    ThreadRequest = False
     RaiseErrors = True
     ActionCursor = crSQLWait
     ReflectChanges = False

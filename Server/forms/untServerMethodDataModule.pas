@@ -56,8 +56,12 @@ type
     procedure ServerMethodDataModuleCreate(Sender: TObject);
     procedure DWServerEvents1EventsReceberDadosReplyEvent(var Params: TDWParams; var Result: string);
     procedure DWServerEvents1EventsLoginReplyEvent(var Params: TDWParams; var Result: string);
-    procedure DWServerEvents1EventsInventarioReplyEvent(var Params: TDWParams; var Result: string);
-    procedure DWServerEvents1EventsProdutosReplyEvent(var Params: TDWParams; var Result: string);
+    procedure DWServerEvents1EventsConferenciaReplyEvent(var Params: TDWParams; var Result: string);
+    procedure DWServerEvents1EventsSepararReplyEvent(var Params: TDWParams; var Result: string);
+    procedure DWServerEvents1EventsProdutosReplyEventByType(var Params: TDWParams; var Result: string; const RequestType: TRequestType; var StatusCode: Integer; RequestHeader: TStringList);
+    procedure DWServerEvents1EventsInventarioReplyEventByType(var Params: TDWParams; var Result: string; const RequestType: TRequestType; var StatusCode: Integer; RequestHeader: TStringList);
+    procedure DWServerEvents1EventsConferenciaPedidoReplyEventByType(var Params: TDWParams; var Result: string; const RequestType: TRequestType; var StatusCode: Integer; RequestHeader: TStringList);
+    procedure DWServerEvents1EventsProdutosContagemReplyEventByType(var Params: TDWParams; var Result: string; const RequestType: TRequestType; var StatusCode: Integer; RequestHeader: TStringList);
   private
     { Private declarations }
     function InternalEncrypt(const S: ansistring; Key: Word): ansistring;
@@ -112,7 +116,7 @@ begin
     Result[I] := Ansichar(byte(Result[I]) xor (Seed shr 8));
     {$ELSE}
     Result[I] := Char(byte(Result[I]) xor (Seed shr 8));
-    {$ENDIF}                                                    ;
+    {$ENDIF}                                                                                                                                                                                            ;
     Seed := (byte(Result[I]) + Seed) * Word(52845) + Word(22719);
   end;
 end;
@@ -131,7 +135,159 @@ begin
   sleep(10);
 end;
 
-procedure TServerModule.DWServerEvents1EventsInventarioReplyEvent(var Params: TDWParams; var Result: string);
+procedure TServerModule.DWServerEvents1EventsConferenciaPedidoReplyEventByType(var Params: TDWParams; var Result: string; const RequestType: TRequestType; var StatusCode: Integer; RequestHeader: TStringList);
+var
+  JSONValue: TJSONValue;
+  I: Integer;
+  aFDQuery: TFDQuery;
+  Filtro: string;
+begin
+  if Params.ItemsString['num_pedi'].AsInteger > 0 then
+    Filtro := ' and hpd.num_pedi = :num_pedi and hpd.cod_loja = :cod_loja '
+  else
+    Filtro := ' and hpd.cod_loja = :cod_loja ';
+
+  try
+    JSONValue := TJSONValue.Create;
+    aFDQuery := TFDQuery.Create(Nil);
+    aFDQuery.Connection := FDConnection1;
+    aFDQuery.Close;
+    aFDQuery.SQL.Clear;
+    aFDQuery.SQL.Add(' select ');
+    aFDQuery.SQL.Add('     hpd.dat_pedi, ');
+    aFDQuery.SQL.Add('     hpd.cod_ven, ');
+    aFDQuery.SQL.Add('     hpd.cod_cli, ');
+    aFDQuery.SQL.Add('     hpd.vlr_tota, ');
+    aFDQuery.SQL.Add('     hpd.num_pedi, ');
+    aFDQuery.SQL.Add('     hpd.localvenda, ');
+    aFDQuery.SQL.Add('     cli.nom_cli, ');
+    aFDQuery.SQL.Add('     ca.cod_prod, ');
+    aFDQuery.SQL.Add('     ca.qtd_prod, ');
+    aFDQuery.SQL.Add('     su.des_prod ');
+    aFDQuery.SQL.Add(' from captbhpd hpd ');
+    aFDQuery.SQL.Add(' left join captbcli cli on cli.cod_cli = hpd.cod_cli ');
+    aFDQuery.SQL.Add(' left join captbipd ca on ca.num_pedi = hpd.num_pedi ');
+    aFDQuery.SQL.Add(' left join supercons su on su.cod_prod = ca.cod_prod ');
+    aFDQuery.SQL.Add(' where hpd.cod_cli = cli.cod_cli ');
+    aFDQuery.SQL.Add('     and flg_caixa in (''S'', ''B'') and flg_conf = ''A'' ');
+    aFDQuery.SQL.Add(Filtro);
+    aFDQuery.SQL.Add(' order by num_pedi desc ');
+    aFDQuery.ParamByName('cod_loja').AsInteger := Params.ItemsString['cod_loja'].AsInteger;
+    if Params.ItemsString['num_pedi'].AsInteger > 0 then
+      aFDQuery.ParamByName('num_pedi').AsInteger := Params.ItemsString['num_pedi'].AsInteger;
+    aFDQuery.Open;
+
+    try
+      if aFDQuery.RecordCount > 0 then
+      begin
+        JSONValue.Encoding := Encoding;
+        JSONValue.Encoded := False;
+        JSONValue.JsonMode := jmPureJSON;
+        JSONValue.LoadFromDataset('', aFDQuery, False, JSONValue.JsonMode, 'dd/mm/yyyy', '.');
+        Result := JSONValue.ToJSON;
+      end
+      else
+      begin
+        StatusCode := 500;
+      end;
+
+    finally
+      begin
+        JSONValue.Free;
+        aFDQuery.DisposeOf;
+      end;
+    end;
+
+  except
+    on E: Exception do
+    begin
+      StatusCode := 500;
+      ShowMessage(E.Message);
+    end;
+  end;
+end;
+
+procedure TServerModule.DWServerEvents1EventsConferenciaReplyEvent(var Params: TDWParams; var Result: string);
+var
+  I: Integer;
+  RESTDWSQL1: TRESTDWClientSQL;
+  aFDQuery: TFDQuery;
+begin
+  RESTDWSQL1 := Nil;
+  RESTDWSQL1 := TRESTDWClientSQL.Create(Nil);
+  aFDQuery := TFDQuery.Create(Nil);
+  aFDQuery.Connection := FDConnection1;
+
+  try
+    RESTDWSQL1.Close;
+    RESTDWSQL1.OpenJson(Params.ItemsString['Dados'].AsString);
+
+    if not RESTDWSQL1.IsEmpty then
+    begin
+
+      try
+        RESTDWSQL1.First;
+        RESTDWSQL1.DisableControls;
+        aFDQuery.Close;
+        aFDQuery.SQL.Clear;
+        aFDQuery.SQL.Add(' update captbhpd set ');
+        aFDQuery.SQL.Add(' flg_conf = ''C'', ');
+        aFDQuery.SQL.Add(' user_conf = :uclogin, ');
+        aFDQuery.SQL.Add(' data_conf = :data_conf ');
+        aFDQuery.SQL.Add(' WHERE num_pedi = :num_pedi ');
+        aFDQuery.ParamByName('num_pedi').AsString := RESTDWSQL1.FieldByName('num_pedi').AsString;
+        aFDQuery.ParamByName('uclogin').AsString := RESTDWSQL1.FieldByName('uclogin').AsString;
+        aFDQuery.ParamByName('data_conf').AsDateTime := Now;
+        aFDQuery.ExecSQL;
+
+      finally
+        begin
+          aFDQuery.DisposeOf;
+          RESTDWSQL1.DisposeOf;
+        end;
+      end;
+    end;
+
+  except
+    on E: Exception do
+      ShowMessage(E.Message);
+  end;
+end;
+
+procedure TServerModule.DWServerEvents1EventsSepararReplyEvent(var Params: TDWParams; var Result: string);
+var
+  I: Integer;
+  aFDQuery: TFDQuery;
+begin
+  aFDQuery := TFDQuery.Create(Nil);
+  aFDQuery.Connection := FDConnection1;
+  try
+    try
+      aFDQuery.Close;
+      aFDQuery.SQL.Clear;
+      aFDQuery.SQL.Add(' update captbhpd set ');
+      aFDQuery.SQL.Add(' flg_conf = ''S'', ');
+      aFDQuery.SQL.Add(' user_separ = :uclogin, ');
+      aFDQuery.SQL.Add(' data_separ = :data_conf ');
+      aFDQuery.SQL.Add(' WHERE num_pedi = :num_pedi ');
+      aFDQuery.ParamByName('num_pedi').AsString := Params.ItemsString['num_pedi'].AsString;
+      aFDQuery.ParamByName('uclogin').AsString := Params.ItemsString['uclogin'].AsString;
+      aFDQuery.ParamByName('data_conf').AsDateTime := Now;
+      aFDQuery.ExecSQL;
+
+    finally
+      begin
+        aFDQuery.DisposeOf;
+      end;
+    end;
+
+  except
+    on E: Exception do
+      ShowMessage(E.Message);
+  end;
+end;
+
+procedure TServerModule.DWServerEvents1EventsInventarioReplyEventByType(var Params: TDWParams; var Result: string; const RequestType: TRequestType; var StatusCode: Integer; RequestHeader: TStringList);
 var
   AFDQuery, LocFDQuery: TFDQuery;
   RESTDWSQL1: TRESTDWClientSQL;
@@ -176,6 +332,15 @@ begin
 
           LocFDQuery.Close;
           LocFDQuery.SQL.Clear;
+          LocFDQuery.SQL.Add(' UPDATE CAPTBPRD ');
+          LocFDQuery.SQL.Add(' SET COD_BARR = :COD_BARR ');
+          LocFDQuery.SQL.Add(' WHERE COD_PROD = :COD_PROD ');
+          LocFDQuery.ParamByName('COD_BARR').Value := RESTDWSQL1.FieldByName('COD_BARR').AsString;
+          LocFDQuery.ParamByName('COD_PROD').Value := RESTDWSQL1.FieldByName('COD_PROD').AsString;
+          LocFDQuery.ExecSQL;
+
+          LocFDQuery.Close;
+          LocFDQuery.SQL.Clear;
           LocFDQuery.SQL.Add(' UPDATE CAPTBEST ');
           LocFDQuery.SQL.Add(' SET LOC_ESTO = :LOC_ESTO, ');
           LocFDQuery.SQL.Add(' QTD_ATUAL = :QTD_ATUAL ');
@@ -185,12 +350,24 @@ begin
           LocFDQuery.ParamByName('COD_PROD').Value := RESTDWSQL1.FieldByName('COD_PROD').AsString;
           LocFDQuery.ExecSQL;
 
+          LocFDQuery.Close;
+          LocFDQuery.SQL.Clear;
+          LocFDQuery.SQL.Add(' UPDATE CAPTBPRD ');
+          LocFDQuery.SQL.Add(' SET DATEUSER = :DATEUSER, ');
+          LocFDQuery.SQL.Add(' UCLOGIN = :UCLOGIN ');
+          LocFDQuery.SQL.Add(' WHERE COD_PROD = :COD_PROD ');
+          LocFDQuery.ParamByName('DATEUSER').AsDateTime := Now;
+          LocFDQuery.ParamByName('UCLOGIN').Value := RESTDWSQL1.FieldByName('UCLOGIN').AsString;
+          LocFDQuery.ParamByName('COD_PROD').Value := RESTDWSQL1.FieldByName('COD_PROD').AsString;
+          LocFDQuery.ExecSQL;
+
           RESTDWSQL1.Next;
         end;
         RESTDWSQL1.EnableControls;
 
         AFDQuery.Execute(RESTDWSQL1.RecordCount);
-        Result := '200';
+        StatusCode := 200;
+        Result := 'Erro';
       end;
 
     finally
@@ -202,7 +379,10 @@ begin
     end;
   except
     on E: Exception do
+    begin
+      StatusCode := 500;
       Result := 'Erro: ' + E.Message;
+    end;
   end;
 end;
 
@@ -230,8 +410,8 @@ begin
     aFDQuery.SQL.Add(' WHERE U.UCTYPEREC = ''U'' ');
     aFDQuery.SQL.Add(' AND UPPER(U.UCLOGIN) = :USUARIO ');
     aFDQuery.SQL.Add(' AND U.UCPASSWORD = :SENHA ');
-    aFDQuery.ParamByName('USUARIO').AsString := Params.ItemsString['Usuario'].AsString;
-    aFDQuery.ParamByName('SENHA').AsString := PostProcess(InternalEncrypt(format('%s', [Params.ItemsString['Senha'].AsString]), 0));
+    aFDQuery.ParamByName('USUARIO').AsString := UpperCase(Params.ItemsString['Usuario'].AsString);
+    aFDQuery.ParamByName('SENHA').AsString := (PostProcess(InternalEncrypt(format('%s', [UpperCase(Params.ItemsString['Senha'].AsString)]), 0)));
     aFDQuery.Open;
 
     try
@@ -244,7 +424,7 @@ begin
         Result := JSONValue.ToJSON;
       end
       else
-        Result := 'error';
+        Result := 'Erro';
 
     finally
       begin
@@ -259,27 +439,79 @@ begin
   end;
 end;
 
-procedure TServerModule.DWServerEvents1EventsProdutosReplyEvent(var Params: TDWParams; var Result: string);
+procedure TServerModule.DWServerEvents1EventsProdutosContagemReplyEventByType(var Params: TDWParams; var Result: string; const RequestType: TRequestType; var StatusCode: Integer; RequestHeader: TStringList);
+var
+  JSONValue: TJSONValue;
+begin
+
+  if Params.ItemsString['pesquisar'].AsString <> '' then
+  begin
+    FDQPadrao.Close;
+    FDQPadrao.SQL.Clear;
+    FDQPadrao.SQL.Add(' SELECT S.*, C.DATEUSER FROM SUPERCONS S ');
+    FDQPadrao.SQL.Add(' LEFT JOIN CAPTBPRD C ON C.COD_PROD = S.COD_PROD ');
+    FDQPadrao.SQL.Add(' WHERE S.COD_BARR = ' + QuotedStr(Params.ItemsString['pesquisar'].AsString));
+    FDQPadrao.Open;
+  end;
+
+  if FDQPadrao.IsEmpty then
+  begin
+    if Params.ItemsString['pesquisar'].AsString <> '' then
+    begin
+      FDQPadrao.Close;
+      FDQPadrao.SQL.Clear;
+      FDQPadrao.SQL.Add(' SELECT S.*, C.DATEUSER FROM SUPERCONS S ');
+      FDQPadrao.SQL.Add(' LEFT JOIN CAPTBPRD C ON C.COD_PROD = S.COD_PROD ');
+      FDQPadrao.SQL.Add(' WHERE S.COD_PROD = ' + QuotedStr(Params.ItemsString['pesquisar'].AsString));
+      FDQPadrao.Open;
+    end;
+  end;
+
+  if not FDQPadrao.IsEmpty then
+  begin
+    try
+      JSONValue := TJSONValue.Create;
+      JSONValue.Encoding := Encoding;
+      JSONValue.Encoded := False;
+      JSONValue.JsonMode := jmPureJSON;
+      JSONValue.LoadFromDataset('', FDQPadrao, False, JSONValue.JsonMode, 'dd/mm/yyyy hh:mm:ss', '.');
+      Result := JSONValue.ToJSON;
+    finally
+      JSONValue.Free;
+    end;
+  end
+  else
+    StatusCode := 500;
+end;
+
+procedure TServerModule.DWServerEvents1EventsProdutosReplyEventByType(var Params: TDWParams; var Result: string; const RequestType: TRequestType; var StatusCode: Integer; RequestHeader: TStringList);
 var
   JSONValue: TJSONValue;
 begin
   FDQPadrao.Close;
   FDQPadrao.SQL.Clear;
 
-  if Params.ItemsString['Data'].AsString <> '' then
+  if Params.ItemsString['pesquisar'].AsString <> '' then
   begin
     FDQPadrao.SQL.Add(' SELECT S.*, C.DATEUSER FROM SUPERCONS S ');
     FDQPadrao.SQL.Add(' LEFT JOIN CAPTBPRD C ON C.COD_PROD = S.COD_PROD ');
-    FDQPadrao.SQL.Add(' WHERE DATEUSER > :DATA ');
-    FDQPadrao.ParamByName('DATA').AsDateTime := StrToDateTime(Params.ItemsString['Data'].AsString);
-  end
-  else
-  begin
-    FDQPadrao.SQL.Add(' SELECT S.*, C.DATEUSER FROM SUPERCONS S ');
-    FDQPadrao.SQL.Add(' LEFT JOIN CAPTBPRD C ON C.COD_PROD = S.COD_PROD ');
+    FDQPadrao.SQL.Add(' WHERE MASTER LIKE ' + QuotedStr('%' + Params.ItemsString['pesquisar'].AsString + '%'));
+
+    FDQPadrao.Open;
   end;
 
-  FDQPadrao.Open;
+//  if Params.ItemsString['Data'].AsString <> '' then
+//  begin
+//    FDQPadrao.SQL.Add(' SELECT S.*, C.DATEUSER FROM SUPERCONS S ');
+//    FDQPadrao.SQL.Add(' LEFT JOIN CAPTBPRD C ON C.COD_PROD = S.COD_PROD ');
+//    FDQPadrao.SQL.Add(' WHERE DATEUSER > :DATA ');
+//    FDQPadrao.ParamByName('DATA').AsDateTime := StrToDateTime(Params.ItemsString['Data'].AsString);
+//  end
+//  else
+//  begin
+//    FDQPadrao.SQL.Add(' SELECT S.*, C.DATEUSER FROM SUPERCONS S ');
+//    FDQPadrao.SQL.Add(' LEFT JOIN CAPTBPRD C ON C.COD_PROD = S.COD_PROD ');
+//  end;
 
   if not FDQPadrao.IsEmpty then
   begin
@@ -297,7 +529,7 @@ begin
     end;
   end
   else
-    Result := 'erro';
+    Result := 'Erro';
 end;
 
 procedure TServerModule.DWServerEvents1EventsReceberDadosReplyEvent(var Params: TDWParams; var Result: string);
@@ -364,7 +596,7 @@ begin
         end;
         pDataSet2.EnableControls;
         aFDQuery.Execute(pDataSet2.RecordCount);
-        Result := '200';
+        Result := 'Erro';
       end;
 
     finally
