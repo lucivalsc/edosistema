@@ -40,12 +40,12 @@ uses
   uSystemEvents,
   untArquivoINI,
   FireDAC.Phys.MySQL,
-  FireDAC.Phys.MySQLDef;
+  FireDAC.Phys.MySQLDef, uRESTDWBasicTypes, uRESTDWBasicDB, uRESTDWBasic,
+  uRESTDWComponentBase;
 
 type
   TServerModule = class(TServerMethodDataModule)
     FDMoniFlatFileClientLink1: TFDMoniFlatFileClientLink;
-    DWServerEvents1: TDWServerEvents;
     RESTDWPoolerDB1: TRESTDWPoolerDB;
     RESTDWDriverFD1: TRESTDWDriverFD;
     FDConnection1: TFDConnection;
@@ -54,14 +54,21 @@ type
     FDStoredProc1: TFDStoredProc;
     pDataSet: TRESTDWClientSQL;
     procedure ServerMethodDataModuleCreate(Sender: TObject);
+
+    //Get
+    procedure DWServerEvents1EventsLoginReplyEvent(var Params: TDWParams; var Result: string);//ok
+    procedure DWServerEvents1EventsProdutosReplyEventByType(var Params: TDWParams; var Result: string; const RequestType: TRequestType; var StatusCode: Integer; RequestHeader: TStringList); //ok
+    procedure DWServerEvents1EventsConferenciaPedidoReplyEventByType(var Params: TDWParams; var Result: string; const RequestType: TRequestType; var StatusCode: Integer; RequestHeader: TStringList); //ok
+    procedure DWServerEvents1EventsProdutosContagemReplyEventByType(var Params: TDWParams; var Result: string; const RequestType: TRequestType; var StatusCode: Integer; RequestHeader: TStringList);  //ok
+
+    //Gravar
     procedure DWServerEvents1EventsReceberDadosReplyEvent(var Params: TDWParams; var Result: string);
-    procedure DWServerEvents1EventsLoginReplyEvent(var Params: TDWParams; var Result: string);
+    procedure DWServerEvents1EventsInventarioReplyEventByType(var Params: TDWParams; var Result: string; const RequestType: TRequestType; var StatusCode: Integer; RequestHeader: TStringList);
+
+    //Update
     procedure DWServerEvents1EventsConferenciaReplyEvent(var Params: TDWParams; var Result: string);
     procedure DWServerEvents1EventsSepararReplyEvent(var Params: TDWParams; var Result: string);
-    procedure DWServerEvents1EventsProdutosReplyEventByType(var Params: TDWParams; var Result: string; const RequestType: TRequestType; var StatusCode: Integer; RequestHeader: TStringList);
-    procedure DWServerEvents1EventsInventarioReplyEventByType(var Params: TDWParams; var Result: string; const RequestType: TRequestType; var StatusCode: Integer; RequestHeader: TStringList);
-    procedure DWServerEvents1EventsConferenciaPedidoReplyEventByType(var Params: TDWParams; var Result: string; const RequestType: TRequestType; var StatusCode: Integer; RequestHeader: TStringList);
-    procedure DWServerEvents1EventsProdutosContagemReplyEventByType(var Params: TDWParams; var Result: string; const RequestType: TRequestType; var StatusCode: Integer; RequestHeader: TStringList);
+
   private
     { Private declarations }
     function InternalEncrypt(const S: ansistring; Key: Word): ansistring;
@@ -135,6 +142,59 @@ begin
   sleep(10);
 end;
 
+procedure TServerModule.DWServerEvents1EventsLoginReplyEvent(var Params: TDWParams; var Result: string);
+var
+  JSONValue: TJSONValue;
+  I: Integer;
+  aFDQuery: TFDQuery;
+begin
+
+  try
+    JSONValue := TJSONValue.Create;
+    aFDQuery := TFDQuery.Create(Nil);
+    aFDQuery.Connection := FDConnection1;
+    aFDQuery.Close;
+    aFDQuery.SQL.Clear;
+    aFDQuery.SQL.Add(' SELECT ');
+    aFDQuery.SQL.Add('     U.UCIDUSER, ');
+    aFDQuery.SQL.Add('     U.UCUSERNAME, ');
+    aFDQuery.SQL.Add('     U.UCEMAIL, ');
+    aFDQuery.SQL.Add('     U.UCLOGIN, ');
+    aFDQuery.SQL.Add('     U.UCPASSWORD, ');
+    aFDQuery.SQL.Add('     U.COD_LOJA ');
+    aFDQuery.SQL.Add(' FROM UCTABUSERS U ');
+    aFDQuery.SQL.Add(' WHERE U.UCTYPEREC = ''U'' ');
+    aFDQuery.SQL.Add(' AND UPPER(U.UCLOGIN) = :USUARIO ');
+    aFDQuery.SQL.Add(' AND U.UCPASSWORD = :SENHA ');
+    aFDQuery.ParamByName('USUARIO').AsString := UpperCase(Params.ItemsString['Usuario'].AsString);
+    aFDQuery.ParamByName('SENHA').AsString := (PostProcess(InternalEncrypt(format('%s', [UpperCase(Params.ItemsString['Senha'].AsString)]), 0)));
+    aFDQuery.Open;
+
+    try
+      if aFDQuery.RecordCount > 0 then
+      begin
+        JSONValue.Encoding := Encoding;
+        JSONValue.Encoded := False;
+        JSONValue.JsonMode := jmPureJSON;
+        JSONValue.LoadFromDataset('', aFDQuery, False, JSONValue.JsonMode, 'dd/mm/yyyy', '.');
+        Result := JSONValue.ToJSON;
+      end
+      else
+        Result := 'Erro';
+
+    finally
+      begin
+        JSONValue.Free;
+        aFDQuery.DisposeOf;
+      end;
+    end;
+
+  except
+    on E: Exception do
+      ShowMessage(E.Message);
+  end;
+end;
+
 procedure TServerModule.DWServerEvents1EventsConferenciaPedidoReplyEventByType(var Params: TDWParams; var Result: string; const RequestType: TRequestType; var StatusCode: Integer; RequestHeader: TStringList);
 var
   JSONValue: TJSONValue;
@@ -173,6 +233,7 @@ begin
     aFDQuery.SQL.Add(Filtro);
     aFDQuery.SQL.Add(' order by num_pedi desc ');
     aFDQuery.ParamByName('cod_loja').AsInteger := Params.ItemsString['cod_loja'].AsInteger;
+
     if Params.ItemsString['num_pedi'].AsInteger > 0 then
       aFDQuery.ParamByName('num_pedi').AsInteger := Params.ItemsString['num_pedi'].AsInteger;
     aFDQuery.Open;
@@ -386,59 +447,6 @@ begin
   end;
 end;
 
-procedure TServerModule.DWServerEvents1EventsLoginReplyEvent(var Params: TDWParams; var Result: string);
-var
-  JSONValue: TJSONValue;
-  I: Integer;
-  aFDQuery: TFDQuery;
-begin
-
-  try
-    JSONValue := TJSONValue.Create;
-    aFDQuery := TFDQuery.Create(Nil);
-    aFDQuery.Connection := FDConnection1;
-    aFDQuery.Close;
-    aFDQuery.SQL.Clear;
-    aFDQuery.SQL.Add(' SELECT ');
-    aFDQuery.SQL.Add('     U.UCIDUSER, ');
-    aFDQuery.SQL.Add('     U.UCUSERNAME, ');
-    aFDQuery.SQL.Add('     U.UCEMAIL, ');
-    aFDQuery.SQL.Add('     U.UCLOGIN, ');
-    aFDQuery.SQL.Add('     U.UCPASSWORD, ');
-    aFDQuery.SQL.Add('     U.COD_LOJA ');
-    aFDQuery.SQL.Add(' FROM UCTABUSERS U ');
-    aFDQuery.SQL.Add(' WHERE U.UCTYPEREC = ''U'' ');
-    aFDQuery.SQL.Add(' AND UPPER(U.UCLOGIN) = :USUARIO ');
-    aFDQuery.SQL.Add(' AND U.UCPASSWORD = :SENHA ');
-    aFDQuery.ParamByName('USUARIO').AsString := UpperCase(Params.ItemsString['Usuario'].AsString);
-    aFDQuery.ParamByName('SENHA').AsString := (PostProcess(InternalEncrypt(format('%s', [UpperCase(Params.ItemsString['Senha'].AsString)]), 0)));
-    aFDQuery.Open;
-
-    try
-      if aFDQuery.RecordCount > 0 then
-      begin
-        JSONValue.Encoding := Encoding;
-        JSONValue.Encoded := False;
-        JSONValue.JsonMode := jmPureJSON;
-        JSONValue.LoadFromDataset('', aFDQuery, False, JSONValue.JsonMode, 'dd/mm/yyyy', '.');
-        Result := JSONValue.ToJSON;
-      end
-      else
-        Result := 'Erro';
-
-    finally
-      begin
-        JSONValue.Free;
-        aFDQuery.DisposeOf;
-      end;
-    end;
-
-  except
-    on E: Exception do
-      ShowMessage(E.Message);
-  end;
-end;
-
 procedure TServerModule.DWServerEvents1EventsProdutosContagemReplyEventByType(var Params: TDWParams; var Result: string; const RequestType: TRequestType; var StatusCode: Integer; RequestHeader: TStringList);
 var
   JSONValue: TJSONValue;
@@ -499,20 +507,6 @@ begin
 
     FDQPadrao.Open;
   end;
-
-//  if Params.ItemsString['Data'].AsString <> '' then
-//  begin
-//    FDQPadrao.SQL.Add(' SELECT S.*, C.DATEUSER FROM SUPERCONS S ');
-//    FDQPadrao.SQL.Add(' LEFT JOIN CAPTBPRD C ON C.COD_PROD = S.COD_PROD ');
-//    FDQPadrao.SQL.Add(' WHERE DATEUSER > :DATA ');
-//    FDQPadrao.ParamByName('DATA').AsDateTime := StrToDateTime(Params.ItemsString['Data'].AsString);
-//  end
-//  else
-//  begin
-//    FDQPadrao.SQL.Add(' SELECT S.*, C.DATEUSER FROM SUPERCONS S ');
-//    FDQPadrao.SQL.Add(' LEFT JOIN CAPTBPRD C ON C.COD_PROD = S.COD_PROD ');
-//  end;
-
   if not FDQPadrao.IsEmpty then
   begin
     try
