@@ -55,6 +55,7 @@ type
     pDataSet: TRESTDWClientSQL;
     procedure ServerMethodDataModuleCreate(Sender: TObject);
 
+
     //Get
     procedure DWServerEvents1EventsLoginReplyEvent(var Params: TDWParams; var Result: string);//ok
     procedure DWServerEvents1EventsProdutosReplyEventByType(var Params: TDWParams; var Result: string; const RequestType: TRequestType; var StatusCode: Integer; RequestHeader: TStringList); //ok
@@ -63,11 +64,11 @@ type
 
     //Gravar
     procedure DWServerEvents1EventsReceberDadosReplyEvent(var Params: TDWParams; var Result: string);
-    procedure DWServerEvents1EventsInventarioReplyEventByType(var Params: TDWParams; var Result: string; const RequestType: TRequestType; var StatusCode: Integer; RequestHeader: TStringList);
+    procedure DWServerEvents1EventsInventarioReplyEventByType(var Params: TDWParams; var Result: string; const RequestType: TRequestType; var StatusCode: Integer; RequestHeader: TStringList); //ok
 
     //Update
-    procedure DWServerEvents1EventsConferenciaReplyEvent(var Params: TDWParams; var Result: string);
-    procedure DWServerEvents1EventsSepararReplyEvent(var Params: TDWParams; var Result: string);
+    procedure DWServerEvents1EventsConferenciaReplyEvent(var Params: TDWParams; var Result: string);  //ok
+    procedure DWServerEvents1EventsSepararReplyEvent(var Params: TDWParams; var Result: string);//Ok
 
   private
     { Private declarations }
@@ -393,34 +394,35 @@ begin
 
           LocFDQuery.Close;
           LocFDQuery.SQL.Clear;
-          LocFDQuery.SQL.Add(' UPDATE CAPTBPRD ');
-          LocFDQuery.SQL.Add(' SET COD_BARR = :COD_BARR ');
-          LocFDQuery.SQL.Add(' WHERE COD_PROD = :COD_PROD ');
+          LocFDQuery.SQL.Add(' UPDATE CAPTBPRD                  ');
+          LocFDQuery.SQL.Add(' SET COD_BARR = :COD_BARR         ');
+          LocFDQuery.SQL.Add(' WHERE COD_PROD = :COD_PROD       ');
           LocFDQuery.ParamByName('COD_BARR').Value := RESTDWSQL1.FieldByName('COD_BARR').AsString;
           LocFDQuery.ParamByName('COD_PROD').Value := RESTDWSQL1.FieldByName('COD_PROD').AsString;
           LocFDQuery.ExecSQL;
 
           LocFDQuery.Close;
           LocFDQuery.SQL.Clear;
-          LocFDQuery.SQL.Add(' UPDATE CAPTBEST ');
-          LocFDQuery.SQL.Add(' SET LOC_ESTO = :LOC_ESTO, ');
-          LocFDQuery.SQL.Add(' QTD_ATUAL = :QTD_ATUAL ');
-          LocFDQuery.SQL.Add(' WHERE COD_PROD = :COD_PROD ');
-          LocFDQuery.ParamByName('LOC_ESTO').Value := RESTDWSQL1.FieldByName('LOC_ESTO').AsString;
-          LocFDQuery.ParamByName('QTD_ATUAL').Value := RESTDWSQL1.FieldByName('QTDE_NOVA').AsString;
-          LocFDQuery.ParamByName('COD_PROD').Value := RESTDWSQL1.FieldByName('COD_PROD').AsString;
-          LocFDQuery.ExecSQL;
-
-          LocFDQuery.Close;
-          LocFDQuery.SQL.Clear;
-          LocFDQuery.SQL.Add(' UPDATE CAPTBPRD ');
-          LocFDQuery.SQL.Add(' SET DATEUSER = :DATEUSER, ');
-          LocFDQuery.SQL.Add(' UCLOGIN = :UCLOGIN ');
+          LocFDQuery.SQL.Add(' UPDATE CAPTBPRD            ');
+          LocFDQuery.SQL.Add(' SET DATEUSER = :DATEUSER,  ');
+          LocFDQuery.SQL.Add(' UCLOGIN = :UCLOGIN         ');
           LocFDQuery.SQL.Add(' WHERE COD_PROD = :COD_PROD ');
           LocFDQuery.ParamByName('DATEUSER').AsDateTime := Now;
           LocFDQuery.ParamByName('UCLOGIN').Value := RESTDWSQL1.FieldByName('UCLOGIN').AsString;
           LocFDQuery.ParamByName('COD_PROD').Value := RESTDWSQL1.FieldByName('COD_PROD').AsString;
           LocFDQuery.ExecSQL;
+
+          LocFDQuery.Close;
+          LocFDQuery.SQL.Clear;
+          LocFDQuery.SQL.Add(' UPDATE CAPTBEST              ');
+          LocFDQuery.SQL.Add(' SET LOC_ESTO = :LOC_ESTO,    ');
+          LocFDQuery.SQL.Add(' QTD_ATUAL = :QTD_ATUAL       ');
+          LocFDQuery.SQL.Add(' WHERE COD_PROD = :COD_PROD   ');
+          LocFDQuery.ParamByName('LOC_ESTO').Value := RESTDWSQL1.FieldByName('LOC_ESTO').AsString;
+          LocFDQuery.ParamByName('QTD_ATUAL').Value := RESTDWSQL1.FieldByName('QTDE_NOVA').AsString;
+          LocFDQuery.ParamByName('COD_PROD').Value := RESTDWSQL1.FieldByName('COD_PROD').AsString;
+          LocFDQuery.ExecSQL;
+
 
           RESTDWSQL1.Next;
         end;

@@ -1,0 +1,9 @@
+{
+	"ip": "192.168.0.114",
+	"portServer": 3001,
+	"database": "D:\\Projetos\\Delphi\\Freelancer\\RicardoJurado\\edosistema\\capdb.fdb",
+	"host": "127.0.0.1",
+	"portFirebird": 3050,
+	"user": "SYSDBA",
+	"password": "masterkey"
+}

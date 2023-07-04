@@ -1,3 +1,4 @@
+import 'package:edo_sistema/error_manager.dart';
 import 'package:edo_sistema/splash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,7 +16,7 @@ void main() {
       systemNavigationBarIconBrightness: Brightness.dark,
     ),
   );
-
+  ErrorManager().init();
   runApp(const MyApp());
 }
 

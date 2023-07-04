@@ -1,5 +1,6 @@
 /*
     iniciar servidor: node server.js
+    gerar bin: pkg .
 */
 
 // const ffi = require('ffi');
@@ -10,6 +11,13 @@ const path = require('path');
 const express = require('express');
 const { Console } = require('console');
 const moment = require('moment'); //Lida com campos datas
+const fs = require('fs');
+
+//  Ajuste as configurações do Node.js:
+const http = require('http');
+
+//  Ajuste o número máximo de sockets simultâneos
+http.globalAgent.maxSockets = 1000000; // Aumente esse número para o valor desejado
 
 // Caminho relativo da DLL
 const dllPath = path.join(__dirname, 'functions.dll');
@@ -24,25 +32,33 @@ const dllPath = path.join(__dirname, 'functions.dll');
 
 // Substitua pelo caminho correto do arquivo config.ini
 // const configPath = 'D:/Projetos/Flutter/Freelancer/RicardoJurado/edosistema/server-node/arquivo.ini'; 
-const configPath = path.join(__dirname, 'arquivo.ini');
+// const configPath = path.join(__dirname, 'arquivo.ini');
 
-const configData = readFileSync(configPath, 'utf-8');
-const config = parse(configData).firebird;
-console.log(configPath);
+// const configData = fs.readFileSync(configPath, 'utf-8');
+// const config = parse(configData).firebird;
+// const server = parse(configData).servidor;
+
+
+// Carregar as configurações do arquivo de configuração
+const serverPath = 'config.json';
+const serverData = fs.readFileSync(serverPath, 'utf-8');
+const server = JSON.parse(serverData);
+
 const options = {
-  host: config.host,
-  port: config.port,
-  database: config.database,
-  user: config.user,
-  password: config.password,
+  host: server.host,
+  port: server.portFirebird,
+  database: server.database,
+  user: server.user,
+  password: server.password,
   lowercase_keys: false // opcional, define se as chaves do resultado serão em minúsculas (padrão: false)
 };
 
 const app = express();
 app.use(express.json({ limit: '500mb' })); // Define o limite do payload para 5mb (ajuste conforme necessário)
 
-const port = 3000;
-const ip = '192.168.1.4';
+
+const ip = server.ip;
+const port = server.portServer;
 app.listen(port, ip, () => {
   console.log(`Servidor rodando em http://${ip}:${port}`);
 });
@@ -391,8 +407,8 @@ app.post('/inventario', async (req, res) => {
         VALUES(GEN_ID(GEN_NUM_PRDHIST, 1), ?, ?, ?, ?, ?, ?, ?, ?, ?)
      `;
 
-     const updateCAPTBPRD  = ` UPDATE CAPTBPRD SET COD_BARR = ?, DATEUSER = ?, UCLOGIN = ? WHERE COD_PROD = ? `;
-     const updateCAPTBEST  = `UPDATE CAPTBEST SET LOC_ESTO = ?, QTD_ATUAL = ? WHERE COD_PROD = ? `;
+    const updateCAPTBPRD = ` UPDATE CAPTBPRD SET COD_BARR = ?, DATEUSER = ?, UCLOGIN = ? WHERE COD_PROD = ? `;
+    const updateCAPTBEST = `UPDATE CAPTBEST SET LOC_ESTO = ?, QTD_ATUAL = ? WHERE COD_PROD = ? `;
 
     const transaction = await new Promise((resolve, reject) => {
       db.transaction(ISOLATION_READ_COMMITED, (err, transaction) => {
@@ -404,8 +420,7 @@ app.post('/inventario', async (req, res) => {
         }
       });
     });
-    console.log(itens.length);
-    for (const item of itens) {      
+    for (const item of itens) {
       const formattedDate = moment(item.DATA, 'DD/MM/YYYY HH:mm:ss').format('YYYY-MM-DD HH:mm:ss');
       const params = [
         formattedDate,
@@ -418,7 +433,7 @@ app.post('/inventario', async (req, res) => {
         item.VLR_VENDA,
         item.COD_LOJA,
       ];
-      
+
       const dateUser = new Date();
       const paramsCAPTBPRD = [
         item.COD_BARR,
@@ -426,7 +441,7 @@ app.post('/inventario', async (req, res) => {
         item.UCLOGIN,
         item.COD_PROD,
       ];
-      
+
       const paramsCAPTBEST = [
         item.LOC_ESTO,
         parseInt(item.QTDE_NOVA),
@@ -437,17 +452,6 @@ app.post('/inventario', async (req, res) => {
 
       try {
         await new Promise((resolve, reject) => {
-          transaction.query(insertQuery, params, (err, result) => {
-            if (err) {
-              console.error(err);
-              transaction.rollback(() => {
-                reject(err);
-              });
-            } else {
-              resolve(result);
-            }
-          });
-
           transaction.query(updateCAPTBPRD, paramsCAPTBPRD, (err, result) => {
             if (err) {
               console.error(err);
@@ -460,6 +464,17 @@ app.post('/inventario', async (req, res) => {
           });
 
           transaction.query(updateCAPTBEST, paramsCAPTBEST, (err, result) => {
+            if (err) {
+              console.error(err);
+              transaction.rollback(() => {
+                reject(err);
+              });
+            } else {
+              resolve(result);
+            }
+          });
+
+          transaction.query(insertQuery, params, (err, result) => {
             if (err) {
               console.error(err);
               transaction.rollback(() => {
