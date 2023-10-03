@@ -1,12 +1,11 @@
 import 'dart:io';
-
 import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as p;
 import 'package:edo_sistema/data/banco_controller.dart';
 import 'package:edo_sistema/data/comum.dart';
 import 'package:edo_sistema/texto_entrada.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:path/path.dart' as p;
 import 'package:http/http.dart' as http;
 
 class Configuracao extends StatefulWidget {

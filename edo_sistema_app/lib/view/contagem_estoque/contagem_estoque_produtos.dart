@@ -1,7 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:edo_sistema/data/comum.dart';
-import 'package:edo_sistema/texto_entrada.dart';
+import 'package:edo_sistema/texto_campo.dart';
 import 'package:edo_sistema/view/contagem_estoque/contagem_estoque_store.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -19,15 +19,29 @@ class _ContagemEstoqueProdutosState extends State<ContagemEstoqueProdutos> {
   ContagemEstoqueStore store = ContagemEstoqueStore();
   bool inLoading = false;
   pesquisarProduto() async {
-    inLoading = true;
+    // inLoading = true;
     setState(() {});
     await store.pesquisarProduto(
       context,
       store.pesquisar.text.toUpperCase(),
       rota: true,
     );
-    inLoading = false;
+    // inLoading = false;
     setState(() {});
+  }
+
+  late FocusNode focusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    focusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    focusNode.dispose();
+    super.dispose();
   }
 
   @override
@@ -44,8 +58,23 @@ class _ContagemEstoqueProdutosState extends State<ContagemEstoqueProdutos> {
                   Row(
                     children: [
                       Flexible(
-                        child: TextoEntrada(
+                        child: TextoCampo(
+                          focusNode: focusNode,
                           labeltext: 'Pesquisar',
+                          onSubmitted: (valor) async {
+                            //Adicionar dados
+                            await pesquisarProduto();
+                            if (store.lista.isNotEmpty) {
+                              await store.salvarContagem(
+                                context,
+                                store.lista[store.indiceItemSelecionado],
+                              );
+                              // store.lista = [];
+                            }
+                            store.pesquisar.clear();
+                            FocusScope.of(context).requestFocus(focusNode);
+                          },
+                          textInputAction: TextInputAction.done,
                           controller: store.pesquisar,
                         ),
                       ),
@@ -53,7 +82,7 @@ class _ContagemEstoqueProdutosState extends State<ContagemEstoqueProdutos> {
                         onPressed: () async {
                           await pesquisarProduto();
                           if (store.lista.isNotEmpty) {
-                            await store.salvarInventario(
+                            await store.salvarContagem(
                               context,
                               store.lista[store.indiceItemSelecionado],
                             );
@@ -79,7 +108,7 @@ class _ContagemEstoqueProdutosState extends State<ContagemEstoqueProdutos> {
                           if (store.pesquisar.text.isNotEmpty) {
                             await pesquisarProduto();
                             if (store.lista.isNotEmpty) {
-                              await store.salvarInventario(
+                              await store.salvarContagem(
                                 context,
                                 store.lista[store.indiceItemSelecionado],
                               );
@@ -212,17 +241,17 @@ class _ContagemEstoqueProdutosState extends State<ContagemEstoqueProdutos> {
             //   floatingActionButton: FloatingActionButton(
             //     backgroundColor: Colors.black45,
             //     onPressed: () async {
-            //       await store.salvarInventario(
+            //       await store.salvarContagem(
             //           context, store.lista[store.indiceItemSelecionado]);
             //     },
             //     child: const Icon(Icons.check),
             //   ),
           )
-        : Scaffold(
+        : const Scaffold(
             body: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
+                children: [
                   CircularProgressIndicator(),
                   SizedBox(height: 25),
                   Text('Pesquisando produtos...'),

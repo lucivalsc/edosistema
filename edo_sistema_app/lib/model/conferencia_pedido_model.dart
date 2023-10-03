@@ -42,6 +42,7 @@ class ConferenciaPedidoModel {
     this.QTDPROD,
     this.DESPROD,
   });
+  
   ConferenciaPedidoModel.fromJson(Map<String?, dynamic> json) {
     DATPEDI = json['DAT_PEDI']?.toString();
     CODVEN = json['COD_VEN']?.toString();
@@ -54,6 +55,7 @@ class ConferenciaPedidoModel {
     QTDPROD = json['QTD_PROD']?.toString();
     DESPROD = json['DES_PROD']?.toString();
   }
+
   Map<String?, dynamic> toJson() {
     final data = <String, Object?>{};
     data['DAT_PEDI'] = DATPEDI;

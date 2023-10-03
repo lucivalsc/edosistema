@@ -20,7 +20,7 @@ const http = require('http');
 http.globalAgent.maxSockets = 1000000; // Aumente esse número para o valor desejado
 
 // Caminho relativo da DLL
-const dllPath = path.join(__dirname, 'functions.dll');
+// const dllPath = path.join(__dirname, 'functions.dll');
 
 // Carregar a DLL
 // const ReadDll = ffi.Library(dllPath, {
@@ -592,3 +592,31 @@ app.post('/itens', async (req, res) => {
     res.status(500).json({ error: 'Erro ao executar a inserção dos itens' });
   }
 });
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+const ffi = require('ffi-napi');
+
+// Defina o caminho para a DLL e sua definição
+const dllPath = 'caminho/para/sua_dll.dll';
+const dllDefinition = `
+  // Definição da função Login
+  char* Login(const char* username);
+`;
+
+// Carregue a DLL com ffi.Library
+const minhaDLL = ffi.Library(dllPath, dllDefinition);
+
+// Use a função da DLL
+const username = 'seu_nome_de_usuario';
+const resultPtr = minhaDLL.Login(username); // O resultado é um ponteiro para o resultado da função
+
+// Converta o ponteiro do resultado para uma string
+const resultado = ffi.string(resultPtr);
+
+// Libere o ponteiro para evitar vazamento de memória
+ffi.Library('msvcrt', {
+  free: ['void', ['pointer']],
+})(resultPtr);
+
+console.log(resultado);
+

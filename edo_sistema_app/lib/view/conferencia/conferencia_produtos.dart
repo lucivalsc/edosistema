@@ -215,11 +215,11 @@ class CconferenciaProdutosState extends State<ConferenciaProdutos> {
               child: const Icon(Icons.check),
             ),
           )
-        : Scaffold(
+        : const Scaffold(
             body: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
+                children: [
                   CircularProgressIndicator(),
                   SizedBox(height: 25),
                   Text('Pesquisando produtos...'),

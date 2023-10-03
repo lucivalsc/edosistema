@@ -46,7 +46,7 @@ class ContagemEstoqueStore {
     }
   }
 
-  salvarInventario(BuildContext context, dynamic item) async {
+  salvarContagem(BuildContext context, dynamic item) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var lista = await itemNaoCadastrado(item['COD_PROD'].toString());
     InventarioModel inv = InventarioModel();
